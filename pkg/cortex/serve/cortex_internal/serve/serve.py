@@ -36,6 +36,7 @@ from cortex_internal.lib.concurrency import FileLock, LockedFile
 from cortex_internal.lib.exceptions import UserRuntimeException
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.gzip import GZipMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse, Response
@@ -52,6 +53,7 @@ loop = asyncio.get_event_loop()
 loop.set_default_executor(request_thread_pool)
 
 app = FastAPI()
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 local_cache: Dict[str, Any] = {
     "api": None,
